@@ -1,0 +1,51 @@
+title: "Advanced SQL: Subqueries and Aggregation"
+description: |
+  This challenge introduces two powerful SQL concepts: subqueries and aggregation functions.
+  
+  **Subqueries** are SQL queries that are nested inside a larger query. They can be used in various parts of a SQL statement, such as:
+  - In the WHERE clause to filter data
+  - In the FROM clause as a data source
+  - In the SELECT list to create derived columns
+  
+  **Aggregation functions** perform calculations on sets of values and return a single value. Common aggregation functions include:
+  - COUNT(): Counts the number of rows
+  - SUM(): Calculates the sum of values
+  - AVG(): Calculates the average of values
+  - MAX(): Finds the maximum value
+  - MIN(): Finds the minimum value
+  
+  When using aggregation functions with other columns, you typically need to use GROUP BY to specify how to group the rows.
+
+difficulty: "advanced"
+
+# Database setup
+setup:
+  - file: "setup.sql"
+
+# Challenge details  
+challenge:
+  task: |
+    Write a query that finds the departments where the average salary is higher than the company-wide average salary.
+    
+    For each such department, return:
+    - The department name
+    - The number of employees in that department
+    - The average salary in that department (rounded to 2 decimal places)
+    
+    Sort the results by the average salary in descending order.
+  
+  expected_columns:
+    - "department"
+    - "employee_count"
+    - "avg_salary"
+  
+  validation:
+    type: "result_set"
+    file: "solution.sql"
+  
+  hints:
+    - "Use GROUP BY to group employees by department."
+    - "Use COUNT() and AVG() aggregation functions."
+    - "Create a subquery to calculate the company-wide average salary."
+    - "Use ROUND() to format the average salary to 2 decimal places."
+    - "Use HAVING to filter groups based on an aggregate condition."

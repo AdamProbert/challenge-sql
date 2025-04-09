@@ -1,0 +1,48 @@
+title: "The Legend of JOINs: Linking Hyrule's Data"
+description: |
+  This challenge introduces one of the most important SQL concepts: table joins, which in the world of Hyrule is like linking different realms together!
+  
+  Joins allow you to combine data from multiple tables based on related columns, much like how Link connects different areas of Hyrule through portals and pathways.
+  This is fundamental to relational databases, where data is often split across
+  different tables to avoid redundancy.
+  
+  The basic syntax for an INNER JOIN is:
+  ```sql
+  SELECT column1, column2, ...
+  FROM table1
+  INNER JOIN table2 ON table1.common_column = table2.common_column;
+  ```
+  
+  In this challenge, you'll work with shops from across Hyrule and the items adventurers have purchased there.
+
+difficulty: "intermediate"
+
+# Database setup
+setup:
+  - file: "setup.sql"
+
+# Challenge details  
+challenge:
+  task: |
+    Link needs your help tracking his purchases! Write a query that returns:
+    - The purchase ID
+    - The purchase date
+    - The rupee amount spent
+    - The name of the shop and its location combined (like "Malo Mart in Castle Town")
+    
+    Join the 'item_purchases' table with the 'shops' table to get this information.
+  
+  expected_columns:
+    - "purchase_id"
+    - "purchase_date"
+    - "rupee_amount"
+    - "shop_details"
+  
+  validation:
+    type: "result_set"
+    file: "solution.sql"
+  
+  hints:
+    - "Use the INNER JOIN keyword to join the tables, like using the Ocarina to connect to different times and places!"
+    - "The common column between the tables is shop_id, like how medallions connect Link to different temples."
+    - "To combine shop_name and location, use the concatenation operator (||) with ' in ' between them."

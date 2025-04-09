@@ -1,0 +1,50 @@
+title: "Super Mario Filter: Using the WHERE Clause"
+description: |
+  Now that you know how to retrieve data with SELECT, it's time to level up your SQL skills! Let's learn how to filter results using the WHERE clause, like finding specific characters in the Mushroom Kingdom.
+  
+  The WHERE clause allows you to specify conditions that must be met for a row to be included in the result set. This is essential for finding specific characters in the vast Mario universe.
+  
+  Basic syntax:
+  ```sql
+  SELECT column1, column2, ...
+  FROM table_name
+  WHERE condition;
+  ```
+  
+  Common operators used in WHERE conditions:
+  - Equal to: =  (Is this character Mario?)
+  - Greater than: >  (Is their power level over 90?)
+  - Less than: <  (Is their power level under 70?)
+  - Greater than or equal to: >=  (Power level at least 80?)
+  - Less than or equal to: <=  (Power level at most 95?)
+  - Not equal to: <> or !=  (Not from the Mushroom Kingdom?)
+  - LIKE: Pattern matching with wildcard characters (% and _)  (Names starting with 'M'?)
+
+difficulty: "beginner"
+
+# Database setup
+setup:
+  - file: "setup.sql"
+
+# Challenge details  
+challenge:
+  task: |
+    Princess Peach needs your help! Write a query that selects all columns from the 'mario_characters' table
+    where the 'kingdom' is 'Mushroom Kingdom'.
+  
+  expected_columns:
+    - "character_id"
+    - "character_name"
+    - "species"
+    - "kingdom"
+    - "power_level"
+    - "first_appearance"
+  
+  validation:
+    type: "result_set"
+    file: "solution.sql"
+  
+  hints:
+    - "Use the WHERE clause to filter records, just like using a Super Scope to find specific targets!"
+    - "The condition should check if the kingdom column equals 'Mushroom Kingdom'."
+    - "Remember that string values in SQL need to be in quotes, like 'Mushroom Kingdom'."

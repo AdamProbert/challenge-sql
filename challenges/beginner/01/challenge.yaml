@@ -1,0 +1,40 @@
+title: "Gotta Query 'Em All: Your First SELECT Statement"
+description: |
+  Welcome to your first SQL challenge! SQL (Structured Query Language) is a language designed to interact with databases, and today you'll be starting your journey as a Pokémon Database Trainer!
+  
+  In this challenge, you'll learn the most fundamental SQL command: SELECT. The SELECT statement allows you to retrieve data from a database, just like using your Pokédex to identify Pokémon.
+  
+  The basic syntax is:
+  ```sql
+  SELECT column1, column2, ...
+  FROM table_name;
+  ```
+  
+  If you want to select all columns, you can use the asterisk (*):
+  ```sql
+  SELECT *
+  FROM table_name;
+  ```
+
+difficulty: "beginner"
+
+setup:
+  - file: "setup.sql"
+
+challenge:
+  task: |
+    Professor Oak needs your help! Write a query that selects all columns from the 'pokemon' table to view all the Pokémon in your database.
+  
+  expected_columns:
+    - "pokemon_id"
+    - "name"
+    - "cp"
+    - "type"
+  
+  validation:
+    type: "result_set"
+    file: "solution.sql"
+  
+  hints:
+    - "Use SELECT * to select all columns, just like scanning all Pokémon with your Pokédex."
+    - "Remember to specify the table name (pokemon) after FROM."

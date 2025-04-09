@@ -1,0 +1,5 @@
+CREATE SCHEMA IF NOT EXISTS common;
+
+GRANT ALL PRIVILEGES ON SCHEMA public TO sqlchallenge;
+
+GRANT ALL PRIVILEGES ON SCHEMA common TO sqlchallenge;
