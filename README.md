@@ -60,6 +60,12 @@ Or check your solution:
 python challenge.py --check solution.sql
 ```
 
+To run all challenge tests:
+
+```bash
+python challenge.py --test-all
+```
+
 ## Challenges
 
 The challenges are organized by difficulty:
@@ -74,7 +80,38 @@ Each challenge provides:
 - Expected output
 - Hints if you get stuck
 
+## Project Structure
+
+```
+challenges/               # Challenge definitions and SQL files
+├── beginner/             # Beginner challenges
+│   ├── 01/               # First beginner challenge
+│   │   ├── challenge.yaml  # Challenge definition
+│   │   ├── setup.sql       # SQL to set up tables and data
+│   │   └── solution.sql    # Solution for validation
+│   └── 02/               # Second beginner challenge
+├── intermediate/         # Intermediate challenges
+└── advanced/             # Advanced challenges
+
+pokedex/                  # Python package containing the application code
+├── __init__.py           # Package initialization
+├── db.py                 # Database connection handling
+├── ui.py                 # User interface components
+├── challenge_loader.py   # Challenge loading functionality
+├── validator.py          # Challenge validation
+└── challenge_runner.py   # Challenge execution logic
+
+.github/                  # GitHub configurations
+└── workflows/            # GitHub Actions workflows
+    └── run-tests.yml     # Workflow to run all challenge tests
+
+challenge.py                    # Command-line interface entry point
+```
+
 ## Contributing
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) for information on how to add new challenges or improve existing ones.
 
+## Continuous Integration
+
+This project uses GitHub Actions to automatically run all challenge tests on every push to ensure that challenges remain valid as the codebase evolves.
