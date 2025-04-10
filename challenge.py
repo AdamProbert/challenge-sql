@@ -28,11 +28,22 @@ def parse_args():
     parser = argparse.ArgumentParser(description='Pokemon SQL Trainer Challenge')
     parser.add_argument('--challenge', type=int, help='Specific challenge number to run')
     parser.add_argument('--test-challenge', metavar='FILE', help='Test a challenge YAML definition')
+    parser.add_argument('--test-all', action='store_true', help='Test all challenge definitions')
     return parser.parse_args()
 
 def main():
     args = parse_args()
-    if args.test_challenge:
+    if args.test_all:
+        outcome = challenge_runner.test_all(
+            db_module=db,
+            ui_module=ui,
+            validator_module=validator,
+            challenge_loader_module=challenge_loader
+        )
+        if outcome == False:
+            console.print("[bold red]Some challenges failed the test.[/bold red]")
+            sys.exit(1)
+    elif args.test_challenge:
         challenge_runner.test_challenge(
             args.test_challenge,
             db_module=db,

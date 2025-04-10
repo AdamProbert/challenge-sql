@@ -198,3 +198,90 @@ def test_challenge(challenge_file, db_module=None, ui_module=None,
             
     except Exception as e:
         console.print(f"[bold red]Error testing challenge: {e}[/bold red]")
+
+def test_all(db_module=None, ui_module=None, validator_module=None, challenge_loader_module=None):
+    """Test all challenge definitions in the challenges directory."""
+    console.print("[bold]Testing all challenges...[/bold]")
+    
+    # Find all challenge.yaml files
+    challenge_files = []
+    challenges_dir = "challenges"
+    
+    if not os.path.exists(challenges_dir):
+        console.print(f"[bold red]Challenges directory not found at {challenges_dir}[/bold red]")
+        return False
+    
+    # Walk through all subdirectories to find challenge.yaml files
+    for root, dirs, files in os.walk(challenges_dir):
+        if "challenge.yaml" in files:
+            challenge_files.append(os.path.join(root, "challenge.yaml"))
+    
+    if not challenge_files:
+        console.print("[bold red]No challenge files found![/bold red]")
+        return False
+    
+    console.print(f"[bold]Found {len(challenge_files)} challenge files[/bold]")
+    
+    # Sort challenge files for consistent ordering
+    challenge_files.sort()
+    
+    # Test each challenge file
+    success_count = 0
+    for challenge_file in challenge_files:
+        console.print(f"\n[bold]Testing: {challenge_file}[/bold]")
+        try:
+            with open(challenge_file, 'r') as file:
+                import yaml
+                challenge = yaml.safe_load(file)
+                challenge['file_path'] = challenge_file
+                challenge['dir'] = os.path.dirname(challenge_file)
+            
+            # Validate the challenge definition
+            missing_fields = challenge_loader_module.validate_challenge(challenge)
+            if missing_fields:
+                console.print(f"[bold red]Challenge definition is invalid: {challenge_file}[/bold red]")
+                for field in missing_fields:
+                    console.print(f"[bold red]- Missing field: {field}[/bold red]")
+                continue
+            
+            # Test database setup and solution
+            try:
+                conn = db_module.connect_to_db()
+                
+                if not db_module.setup_challenge_database(conn, challenge):
+                    console.print(f"[bold red]Failed to set up database for: {challenge_file}[/bold red]")
+                    continue
+                
+                # If solution file exists, test it
+                validation = challenge.get('challenge', {}).get('validation', {})
+                if validation.get('type') == 'result_set':
+                    solution_file = os.path.join(challenge['dir'], validation.get('file'))
+                    if os.path.exists(solution_file):
+                        success, message = validator_module.validate_solution_file(solution_file, challenge, conn, db_module)
+                        if not success:
+                            console.print(f"[bold red]Solution validation failed for {challenge_file}: {message}[/bold red]")
+                            continue
+                    else:
+                        console.print(f"[bold red]Solution file does not exist: {solution_file}[/bold red]")
+                        continue
+                
+                console.print(f"[bold green]✓ Challenge passed: {challenge.get('title')}[/bold green]")
+                success_count += 1
+                
+            except Exception as e:
+                console.print(f"[bold red]Error testing challenge {challenge_file}: {e}[/bold red]")
+                continue
+            finally:
+                if 'conn' in locals() and conn:
+                    conn.close()
+                    
+        except Exception as e:
+            console.print(f"[bold red]Error loading challenge {challenge_file}: {e}[/bold red]")
+    
+    # Print summary
+    if success_count == len(challenge_files):
+        console.print(f"\n[bold green]All {success_count}/{len(challenge_files)} challenges passed successfully![/bold green]")
+        return True
+    else:
+        console.print(f"\n[bold yellow]{success_count}/{len(challenge_files)} challenges passed. Some challenges have issues.[/bold yellow]")
+        return False
