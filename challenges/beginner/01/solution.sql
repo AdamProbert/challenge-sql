@@ -2,4 +2,4 @@
 SELECT
     *
 FROM
-    ass;
+    pokemon;
