@@ -1,6 +1,6 @@
 #!/usr/bin/env python3.11
 """
-SQL Learning Challenge - Command Line Interface
+Pokemon SQL Trainer - Command Line Interface
 This script provides a command-line interface for users to interact with SQL learning challenges.
 """
 
@@ -10,6 +10,8 @@ import sys
 import yaml
 import re
 import psycopg2
+import signal
+import readline
 from rich.console import Console
 from rich.table import Table
 from rich.markdown import Markdown
@@ -29,13 +31,20 @@ DB_PARAMS = {
     'port': 5432
 }
 
+# Handle Ctrl+C gracefully
+def signal_handler(sig, frame):
+    console.print("\n[bold yellow]Exiting Pokemon SQL Trainer. Keep training to become a SQL Master![/bold yellow]")
+    sys.exit(0)
+
+signal.signal(signal.SIGINT, signal_handler)
+
 def connect_to_db():
     """Connect to the PostgreSQL database."""
     try:
         conn = psycopg2.connect(**DB_PARAMS)
         return conn
     except Exception as e:
-        console.print(f"[bold red]Error connecting to database: {e}[/bold red]")
+        console.print(f"[bold red]Error connecting to Pokedex database: {e}[/bold red]")
         sys.exit(1)
 
 def validate_challenge_directories(difficulty):
@@ -112,6 +121,10 @@ def execute_query(conn, query_sql):
     """Execute SQL query and return results."""
     cursor = conn.cursor()
     try:
+        # Add semicolon if user didn't include one
+        if not query_sql.strip().endswith(';'):
+            query_sql += ';'
+            
         cursor.execute(query_sql)
         if cursor.description:
             columns = [desc[0] for desc in cursor.description]
@@ -227,8 +240,12 @@ def show_challenge(challenge):
     """Display challenge information."""
     console.print(Panel(f"[bold]Challenge: {challenge.get('title')}[/bold]", 
                        subtitle=f"Difficulty: {challenge.get('difficulty')}"))
+    
+    # Display description (tutorial part)
     console.print(Markdown(challenge.get('description', '')))
-    console.print("\n[bold]Task:[/bold]")
+    
+    # Highlight the task better using markdown heading
+    console.print(Markdown("## Your Task:"))
     console.print(Markdown(challenge.get('challenge', {}).get('task', '')))
     
     # Show expected columns
@@ -258,9 +275,63 @@ def show_challenge(challenge):
             console.print(f"  - {column} ({dtype})")
                 
     except Exception as e:
-        console.print(f"[red]Error retrieving database schema: {e}[/red]")
+        console.print(f"[red]Error retrieving Pokedex schema: {e}[/red]")
     finally:
         conn.close()
+
+def show_table_data(conn):
+    """Display the data of a selected table."""
+    try:
+        cursor = conn.cursor()
+        
+        # Get list of available tables
+        cursor.execute("""
+            SELECT table_name 
+            FROM information_schema.tables 
+            WHERE table_schema = 'public'
+            ORDER BY table_name;
+        """)
+        tables = [row[0] for row in cursor.fetchall()]
+        
+        if not tables:
+            console.print("[yellow]No tables found in the database.[/yellow]")
+            return
+            
+        # Show table selection menu
+        console.print("\n[bold]Available Tables:[/bold]")
+        for i, table in enumerate(tables, 1):
+            console.print(f"{i}. {table}")
+            
+        console.print("\nEnter the number of the table you want to view (or 'b' to go back):")
+        selection = input("> ")
+        
+        if selection.lower() == 'b':
+            return
+            
+        try:
+            table_index = int(selection) - 1
+            if table_index < 0 or table_index >= len(tables):
+                console.print("[bold red]Invalid selection.[/bold red]")
+                return
+                
+            selected_table = tables[table_index]
+            
+            # Execute query to get all data from the table
+            cursor.execute(f"SELECT * FROM {selected_table} LIMIT 100;")
+            columns = [desc[0] for desc in cursor.description]
+            results = cursor.fetchall()
+            
+            console.print(f"\n[bold]Data from table '{selected_table}':[/bold]")
+            display_table(columns, results)
+            
+            if len(results) == 100:
+                console.print("[yellow]Note: Only showing first 100 rows.[/yellow]")
+                
+        except ValueError:
+            console.print("[bold red]Invalid input. Please enter a number.[/bold red]")
+            
+    except Exception as e:
+        console.print(f"[bold red]Error retrieving table data: {e}[/bold red]")
 
 def check_solution(challenge_num, solution_file):
     """Check if a solution file is correct for a given challenge."""
@@ -314,7 +385,7 @@ def interactive_mode(challenge_num=None):
         current_challenge = challenge_num - 1
     else:
         # Show challenge list
-        console.print("[bold]Available Challenges:[/bold]")
+        console.print("[bold]Available Pokemon SQL Challenges:[/bold]")
         for i, challenge in enumerate(challenges, 1):
             console.print(f"{i}. [{challenge.get('difficulty')}] {challenge.get('title')}")
             
@@ -345,24 +416,40 @@ def interactive_mode(challenge_num=None):
             console.clear()
             show_challenge(challenge)
             
-            console.print("\n[bold]Enter your SQL query (or 'q' to quit, 'h' for hint):[/bold]")
-            console.print("[italic yellow](Press Enter twice to submit your query)[/italic yellow]")
+            console.print("\n[bold]Enter your SQL query (or 'q' to quit, 'h' for hint, 'v' to view table data):[/bold]")
+            console.print("[italic yellow](End your SQL query with a semicolon and press Enter to submit)[/italic yellow]")
+            
+            user_sql = ""
             lines = []
             while True:
-                line = input()
-                if line.strip() == "":
+                try:
+                    line = input()
+                    # Handle single-letter commands immediately - no semicolon required
+                    if line.lower() in ['q', 'h', 'v']:
+                        user_sql = line.lower()
+                        break
+                        
+                    lines.append(line)
+                    user_sql = "\n".join(lines)
+                    
+                    # If line contains semicolon, we can execute the SQL
+                    if ';' in line:
+                        break
+                except EOFError:
                     break
-                lines.append(line)
-            
-            user_sql = "\n".join(lines)
-            
-            if user_sql.lower() == 'q':
+                    
+            if user_sql == 'q':
                 break
                 
-            if user_sql.lower() == 'h':
+            if user_sql == 'v':
+                show_table_data(conn)
+                input("\nPress Enter to continue...")
+                continue
+                
+            if user_sql == 'h':
                 hints = challenge.get('challenge', {}).get('hints', [])
                 if hints:
-                    console.print("\n[bold yellow]Hints:[/bold yellow]")
+                    console.print("\n[bold yellow]Pokedex Hints:[/bold yellow]")
                     for i, hint in enumerate(hints, 1):
                         console.print(f"[yellow]{i}. {hint}[/yellow]")
                 else:
@@ -378,7 +465,7 @@ def interactive_mode(challenge_num=None):
                     if isinstance(results, str):
                         console.print(f"[bold red]SQL Error: {results}[/bold red]")
                     else:
-                        console.print("\n[bold]Query Results:[/bold]")
+                        console.print("\n[bold]Pokedex Results:[/bold]")
                         display_table(columns, results)
                         
                         # Validate the query
@@ -386,16 +473,16 @@ def interactive_mode(challenge_num=None):
                         if success:
                             console.print(f"[bold green]{message}[/bold green]")
                             
-                            # If there's a next challenge, ask if they want to proceed
+                            # If there's a next challenge, automatically proceed
                             if current_challenge < len(challenges) - 1:
-                                console.print("\n[bold]Congratulations! Would you like to proceed to the next challenge? (y/n)[/bold]")
-                                if input("> ").lower() == 'y':
-                                    current_challenge += 1
-                                    challenge = challenges[current_challenge]
-                                    setup_challenge_database(conn, challenge)
-                                    continue
+                                console.print("\n[bold]Great work, Trainer! Press Enter to proceed to the next challenge.[/bold]")
+                                input()
+                                current_challenge += 1
+                                challenge = challenges[current_challenge]
+                                setup_challenge_database(conn, challenge)
+                                continue
                             else:
-                                console.print("\n[bold green]Congratulations! You've completed all the challenges![/bold green]")
+                                console.print("\n[bold green]Congratulations! You've completed all Pokemon SQL challenges! You're ready to be a Pokemon SQL Master![/bold green]")
                         else:
                             console.print(f"[bold red]{message}[/bold red]")
                 except Exception as e:
@@ -483,7 +570,7 @@ def test_challenge(challenge_file):
         console.print(f"[bold red]Error testing challenge: {e}[/bold red]")
 
 def main():
-    parser = argparse.ArgumentParser(description='SQL Learning Challenge')
+    parser = argparse.ArgumentParser(description='Pokemon SQL Trainer Challenge')
     parser.add_argument('--challenge', type=int, help='Specific challenge number to run')
     parser.add_argument('--check', metavar='FILE', help='Check if a SQL file solves the specified challenge')
     parser.add_argument('--test-challenge', metavar='FILE', help='Test a challenge YAML definition')

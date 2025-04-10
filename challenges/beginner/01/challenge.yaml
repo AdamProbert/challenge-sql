@@ -1,8 +1,11 @@
 title: "Gotta Query 'Em All: Your First SELECT Statement"
 description: |
-  Welcome to your first SQL challenge! SQL (Structured Query Language) is a language designed to interact with databases, and today you'll be starting your journey as a Pokémon Database Trainer!
+  Welcome to your first SQL challenge in the Pokemon SQL PokeDex! SQL (Structured Query Language) 
+  is the language used by Pokemon Professors worldwide to interact with their Pokemon databases.
+  Today, you'll take your first steps as a Pokemon Database Trainer!
   
-  In this challenge, you'll learn the most fundamental SQL command: SELECT. The SELECT statement allows you to retrieve data from a database, just like using your Pokédex to identify Pokémon.
+  In this challenge, you'll learn the most fundamental SQL command: SELECT. The SELECT statement 
+  allows you to retrieve data from a database, just like using your Pokedex to identify Pokemon.
   
   The basic syntax is:
   ```sql

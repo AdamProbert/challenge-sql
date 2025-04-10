@@ -2,7 +2,7 @@
 SELECT
     ip.purchase_id,
     ip.purchase_date,
-    ip.rupee_amount,
+    ip.pokecoin_amount,
     s.shop_name || ' in ' || s.location AS shop_details
 FROM
     item_purchases ip

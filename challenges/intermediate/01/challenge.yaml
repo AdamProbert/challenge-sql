@@ -1,8 +1,8 @@
-title: "The Legend of JOINs: Linking Hyrule's Data"
+title: "Pokemon Relationships: Mastering JOINs"
 description: |
-  This challenge introduces one of the most important SQL concepts: table joins, which in the world of Hyrule is like linking different realms together!
+  This challenge introduces one of the most important SQL concepts: table joins, which in the world of Pokemon is like connecting different Pokedex entries together!
   
-  Joins allow you to combine data from multiple tables based on related columns, much like how Link connects different areas of Hyrule through portals and pathways.
+  Joins allow you to combine data from multiple tables based on related columns, much like how a complete Pokedex links Pokemon with their evolutions, moves, and habitats.
   This is fundamental to relational databases, where data is often split across
   different tables to avoid redundancy.
   
@@ -13,7 +13,7 @@ description: |
   INNER JOIN table2 ON table1.common_column = table2.common_column;
   ```
   
-  In this challenge, you'll work with shops from across Hyrule and the items adventurers have purchased there.
+  In this challenge, you'll work with Pokemon and their trainers from across different regions.
 
 difficulty: "intermediate"
 
@@ -24,18 +24,18 @@ setup:
 # Challenge details  
 challenge:
   task: |
-    Link needs your help tracking his purchases! Write a query that returns:
+    Professor Oak needs your help tracking Pokemon ownership! Write a query that returns:
     - The purchase ID
     - The purchase date
-    - The rupee amount spent
-    - The name of the shop and its location combined (like "Malo Mart in Castle Town")
+    - The pokecoin amount spent
+    - The name of the shop and its location combined (like "Poke Mart in Viridian City")
     
     Join the 'item_purchases' table with the 'shops' table to get this information.
   
   expected_columns:
     - "purchase_id"
     - "purchase_date"
-    - "rupee_amount"
+    - "pokecoin_amount"
     - "shop_details"
   
   validation:
@@ -43,6 +43,6 @@ challenge:
     file: "solution.sql"
   
   hints:
-    - "Use the INNER JOIN keyword to join the tables, like using the Ocarina to connect to different times and places!"
-    - "The common column between the tables is shop_id, like how medallions connect Link to different temples."
+    - "Use the INNER JOIN keyword to join the tables, just like how a Pokemon links to its evolutions!"
+    - "The common column between the tables is shop_id, similar to how a trainer_id connects a trainer to their Pokemon."
     - "To combine shop_name and location, use the concatenation operator (||) with ' in ' between them."

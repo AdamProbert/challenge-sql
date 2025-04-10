@@ -2,6 +2,6 @@
 SELECT
     *
 FROM
-    mario_characters
+    pokemon
 WHERE
-    kingdom = 'Mushroom Kingdom';
+    type = 'Electric';

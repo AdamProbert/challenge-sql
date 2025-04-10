@@ -1,12 +1,12 @@
-# SQL Learning Challenge
+# Pokemon SQL Trainer: Learning with the Pokedex
 
-This repository contains a series of progressive challenges designed to help you learn SQL fundamentals with no prior knowledge. The challenges gradually introduce more advanced SQL concepts, starting from basic SELECT statements and working up to complex queries.
+This repository contains a series of progressive challenges designed to help you learn SQL fundamentals with no prior knowledge. The challenges are themed around building and using a Pokedex database, starting from basic SELECT statements and working up to complex queries that Professor Oak himself would be proud of!
 
 ## Prerequisites
 
 - Docker (for running the PostgreSQL database)
 - pyenv (for managing Python versions)
-- Python 3.11 (for the challenge interface)
+- Python 3.11 (for the Pokedex interface)
 
 ## Installation
 
@@ -22,10 +22,10 @@ cd challenge-sql
 pyenv install 3.11.4
 
 # Create a virtual environment for this project
-pyenv virtualenv 3.11.4 sql-challenge
+pyenv virtualenv 3.11.4 pokemon-sql
 
 # Activate the virtual environment
-pyenv local sql-challenge
+pyenv local pokemon-sql
 ```
 
 3. Install Python dependencies:
@@ -38,11 +38,11 @@ pip install -r requirements.txt
 docker-compose up -d
 ```
 
-This will start a PostgreSQL database with pre-loaded data for the challenges.
+This will start a PostgreSQL database with pre-loaded Pokemon data for the challenges.
 
 ## Running Challenges
 
-To start the challenge interface:
+To start the Pokedex interface:
 
 ```bash
 python challenge.py
@@ -64,13 +64,13 @@ python challenge.py --check solution.sql
 
 The challenges are organized by difficulty:
 
-1. **Beginner**: Basic SELECT statements, WHERE clauses, and simple filtering
-2. **Intermediate**: Joins, aggregations, and GROUP BY
-3. **Advanced**: Subqueries, window functions, and more complex operations
+1. **Beginner**: Basic SELECT statements, WHERE clauses, and simple filtering - just like your starter Pokemon
+2. **Intermediate**: Joins, aggregations, and GROUP BY - evolving your SQL skills
+3. **Advanced**: Subqueries, window functions, and more complex operations - mastering SQL like a Pokemon Champion
 
 Each challenge provides:
 - A clear description of the task
-- Sample data to work with
+- Sample Pokemon data to work with
 - Expected output
 - Hints if you get stuck
 

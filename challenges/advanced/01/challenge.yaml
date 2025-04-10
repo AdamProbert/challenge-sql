@@ -1,18 +1,18 @@
-title: "Advanced SQL: Subqueries and Aggregation"
+title: "Advanced Pokemon Analytics: Subqueries and Aggregation"
 description: |
-  This challenge introduces two powerful SQL concepts: subqueries and aggregation functions.
+  This challenge introduces two powerful SQL concepts that Pokemon researchers use: subqueries and aggregation functions.
   
-  **Subqueries** are SQL queries that are nested inside a larger query. They can be used in various parts of a SQL statement, such as:
+  **Subqueries** are SQL queries that are nested inside a larger query, like a Pokemon that contains another Pokemon (think Kangaskhan with its baby). They can be used in various parts of a SQL statement, such as:
   - In the WHERE clause to filter data
   - In the FROM clause as a data source
   - In the SELECT list to create derived columns
   
-  **Aggregation functions** perform calculations on sets of values and return a single value. Common aggregation functions include:
-  - COUNT(): Counts the number of rows
-  - SUM(): Calculates the sum of values
-  - AVG(): Calculates the average of values
-  - MAX(): Finds the maximum value
-  - MIN(): Finds the minimum value
+  **Aggregation functions** perform calculations on sets of values and return a single value, similar to how the Pokedex calculates overall statistics for Pokemon types. Common aggregation functions include:
+  - COUNT(): Counts the number of Pokemon
+  - SUM(): Calculates the sum of values (like total CP)
+  - AVG(): Calculates the average of values (like average HP)
+  - MAX(): Finds the maximum value (like highest Attack stat)
+  - MIN(): Finds the minimum value (like lowest Defense stat)
   
   When using aggregation functions with other columns, you typically need to use GROUP BY to specify how to group the rows.
 
@@ -25,27 +25,27 @@ setup:
 # Challenge details  
 challenge:
   task: |
-    Write a query that finds the departments where the average salary is higher than the company-wide average salary.
+    Professor Oak is conducting regional Pokemon research! Write a query that finds the Pokemon types where the average CP is higher than the global average CP across all Pokemon.
     
-    For each such department, return:
-    - The department name
-    - The number of employees in that department
-    - The average salary in that department (rounded to 2 decimal places)
+    For each such type, return:
+    - The Pokemon type
+    - The number of Pokemon of that type
+    - The average CP of Pokemon with that type (rounded to 2 decimal places)
     
-    Sort the results by the average salary in descending order.
+    Sort the results by the average CP in descending order.
   
   expected_columns:
-    - "department"
-    - "employee_count"
-    - "avg_salary"
+    - "pokemon_type"
+    - "pokemon_count" 
+    - "avg_cp"
   
   validation:
     type: "result_set"
     file: "solution.sql"
   
   hints:
-    - "Use GROUP BY to group employees by department."
-    - "Use COUNT() and AVG() aggregation functions."
-    - "Create a subquery to calculate the company-wide average salary."
-    - "Use ROUND() to format the average salary to 2 decimal places."
-    - "Use HAVING to filter groups based on an aggregate condition."
+    - "Use GROUP BY to group Pokemon by type."
+    - "Use COUNT() and AVG() aggregation functions, just like the Pokedex calculates statistics."
+    - "Create a subquery to calculate the global average CP across all Pokemon."
+    - "Use ROUND() to format the average CP to 2 decimal places."
+    - "Use HAVING to filter groups based on an aggregate condition, like finding types that exceed the global average."

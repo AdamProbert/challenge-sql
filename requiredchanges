@@ -1,0 +1,17 @@
+Feedback:
+- Too much content per challenge.
+  - SPlit into, the tutorial and the challenge. All on one page is too much.
+
+- Stick with just pokemon, lets make the whole thing themed around a pokedex.
+
+- Can't navigate back a line in the interactive terminal. Once enter is pressed once, thats it.
+
+- Supply a semicolon if the user didn't. This is a common mistake and should be handled.
+
+- Highlight the Task easier using H in markdown. The challenge heading is good for this.
+
+- Capture ctrl+c and handle nicely.
+
+- Double enter is weird.. work it out. option: if semicolon is present, one enter will submit. Can't submit sql queries without semicolon.
+
+- Auto continue when enter pressed after success, instead of having to enter Y.

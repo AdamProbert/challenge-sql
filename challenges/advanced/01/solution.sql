@@ -1,19 +1,20 @@
 -- Solution for advanced subquery & aggregation challenge
 SELECT
-    d.department_name AS department,
-    COUNT(e.employee_id) AS employee_count,
-    ROUND(AVG(e.salary), 2) AS avg_salary
+    pt.type_name AS pokemon_type,
+    COUNT(p.pokemon_id) AS pokemon_count,
+    ROUND(AVG(p.cp), 2) AS avg_cp
 FROM
-    departments d
-    JOIN employees e ON d.department_id = e.department_id
+    pokemon_types pt
+    JOIN pokemon p ON pt.type_id = p.type_id
+    OR pt.type_id = p.secondary_type_id
 GROUP BY
-    d.department_name
+    pt.type_name
 HAVING
-    AVG(e.salary) > (
+    AVG(p.cp) > (
         SELECT
-            AVG(salary)
+            AVG(cp)
         FROM
-            employees
+            pokemon
     )
 ORDER BY
-    avg_salary DESC;
+    avg_cp DESC;

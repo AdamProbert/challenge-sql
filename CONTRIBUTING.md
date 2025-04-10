@@ -1,6 +1,6 @@
-# Contributing to SQL Learning Challenge
+# Contributing to Pokemon SQL Trainer
 
-Thank you for considering contributing to the SQL Learning Challenge repository! This document provides guidelines on how to add new challenges or improve existing ones.
+Thank you for considering contributing to the Pokemon SQL Trainer repository! This document provides guidelines on how to add new challenges or improve existing ones.
 
 ## Development Environment Setup
 
@@ -11,10 +11,10 @@ Before contributing to the project, please set up your development environment:
 pyenv install 3.11.4
 
 # Create a virtual environment for this project
-pyenv virtualenv 3.11.4 sql-challenge
+pyenv virtualenv 3.11.4 pokemon-sql
 
 # Activate the virtual environment
-pyenv local sql-challenge
+pyenv local pokemon-sql
 
 # Install dependencies
 pip install -r requirements.txt
@@ -78,14 +78,14 @@ setup:
 # Challenge details  
 challenge:
   task: |
-    Write a query that selects all employees from the employees table
-    where the salary is greater than 50000.
+    Write a query that selects all Pokemon from the pokemon table
+    where the level is greater than 50.
   
   expected_columns:
-    - "employee_id"
-    - "first_name"
-    - "last_name"
-    - "salary"
+    - "pokemon_id"
+    - "name"
+    - "type"
+    - "level"
   
   validation:
     type: "result_set"  # Can be "result_set", "row_count", or "custom"
