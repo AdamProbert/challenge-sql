@@ -78,6 +78,3 @@ Each challenge provides:
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) for information on how to add new challenges or improve existing ones.
 
-## License
-
-MIT
