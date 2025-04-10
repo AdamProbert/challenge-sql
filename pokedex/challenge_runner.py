@@ -198,25 +198,3 @@ def test_challenge(challenge_file, db_module=None, ui_module=None,
             
     except Exception as e:
         console.print(f"[bold red]Error testing challenge: {e}[/bold red]")
-
-def check_challenge_solution(challenge_num, solution_file, db_module=None, ui_module=None,
-                            validator_module=None, challenge_loader_module=None):
-    """Check if a solution file is correct for a given challenge."""
-    challenges = challenge_loader_module.load_challenges()
-    
-    if challenge_num < 1 or challenge_num > len(challenges):
-        console.print(f"[bold red]Challenge {challenge_num} not found. Available challenges: 1-{len(challenges)}[/bold red]")
-        return False
-        
-    challenge = challenges[challenge_num - 1]
-    
-    try:
-        conn = db_module.connect_to_db()
-    except Exception as e:
-        console.print(f"[bold red]Failed to connect to the database: {e}[/bold red]")
-        return False
-        
-    try:
-        return validator_module.check_solution(challenge, solution_file, conn, db_module)
-    finally:
-        conn.close()
