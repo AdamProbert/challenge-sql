@@ -12,7 +12,7 @@ This repository contains a series of progressive challenges designed to help you
 
 1. Clone this repository:
 ```bash
-git clone https://github.com/yourusername/challenge-sql.git
+git clone git@github.com:AdamProbert/challenge-sql.git
 cd challenge-sql
 ```
 
