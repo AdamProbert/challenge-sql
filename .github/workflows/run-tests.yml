@@ -14,37 +14,67 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Set up Docker
+      - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
+
+      - name: Cache Docker layers
+        uses: actions/cache@v3
+        with:
+          path: /tmp/.buildx-cache
+          key: ${{ runner.os }}-buildx-${{ hashFiles('**/Dockerfile', '**/docker-compose.yml') }}
+          restore-keys: |
+            ${{ runner.os }}-buildx-
 
       - name: Set up Python 3.11
         uses: actions/setup-python@v4
         with:
           python-version: "3.11"
           cache: "pip"
+          cache-dependency-path: "**/requirements.txt"
 
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
           if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
 
+      - name: Build and cache Docker images
+        uses: docker/build-push-action@v4
+        with:
+          context: .
+          push: false
+          load: true
+          tags: sql-challenge-postgres:latest
+          cache-from: type=local,src=/tmp/.buildx-cache
+          cache-to: type=local,dest=/tmp/.buildx-cache-new,mode=max
+
       - name: Start database
         run: docker compose up -d
 
       - name: Wait for database to be ready
         run: |
-          # Wait for PostgreSQL to be ready
+          # Wait for the database to be ready
+          echo "Waiting for database to be ready..."
           timeout=60
-          while ! docker exec $(docker ps -q -f name=postgres) pg_isready -U postgres 2>/dev/null; do
-            timeout=$((timeout-1))
-            if [ $timeout -eq 0 ]; then
-              echo "Timeout waiting for PostgreSQL to be ready"
-              exit 1
-            fi
-            echo "Waiting for PostgreSQL to be ready..."
+          counter=0
+          until docker exec $(docker ps -q --filter name=postgres) pg_isready -h localhost -U postgres || [ $counter -eq $timeout ]; do
+            echo "Waiting for database connection... ($counter/$timeout)"
             sleep 1
+            counter=$((counter+1))
           done
+
+          if [ $counter -eq $timeout ]; then
+            echo "Database connection timed out after ${timeout} seconds"
+            exit 1
+          else
+            echo "Database is ready!"
+          fi
 
       - name: Run all challenge tests
         run: |
           python challenge.py --test-all
+
+      # Move cache to prevent growing cache size
+      - name: Move cache
+        run: |
+          rm -rf /tmp/.buildx-cache
+          mv /tmp/.buildx-cache-new /tmp/.buildx-cache

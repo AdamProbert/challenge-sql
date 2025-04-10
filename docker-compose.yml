@@ -5,6 +5,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+    container_name: postgres
     ports:
       - "5432:5432"
     volumes:
