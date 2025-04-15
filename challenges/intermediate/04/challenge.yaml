@@ -1,0 +1,69 @@
+title: "HAVING: Filtering Grouped Results"
+description: |
+  In the last challenge, you learned about GROUP BY for grouping data. Now, let's learn about HAVING, which allows you to filter grouped results, similar to how a Pokemon Trainer might only focus on Pokemon types where they have at least 3 different species.
+  
+  While the WHERE clause filters rows before they're grouped, the HAVING clause filters groups after the grouping operation. This allows you to filter based on aggregate values that don't exist until after grouping.
+  
+  Basic syntax:
+  ```sql
+  SELECT
+      column1,
+      AGG_FUNCTION(column2)
+  FROM
+      table_name
+  GROUP BY
+      column1
+  HAVING
+      condition_based_on_aggregation;
+  ```
+  
+  For example, to find Pokemon types that have an average CP above 1500:
+  ```sql
+  SELECT
+      type,
+      AVG(cp) AS avg_cp
+  FROM
+      pokemon
+  GROUP BY
+      type
+  HAVING
+      AVG(cp) > 1500;
+  ```
+
+difficulty: "intermediate"
+
+setup:
+  - file: "setup.sql"
+
+challenge:
+  task: |
+    Professor Oak is analyzing Pokemon types to understand which types tend to be the strongest. He wants to focus on common types with high average power.
+    
+    Write a query that:
+    1. Groups Pokemon by their type
+    2. For each type, calculates:
+       - The count of Pokemon of that type (as "pokemon_count")
+       - The average CP of Pokemon of that type (as "avg_cp")
+       - The highest CP among Pokemon of that type (as "max_cp")
+    3. Includes only types where:
+       - There are at least 3 Pokemon of that type, AND
+       - The average CP is greater than 1400
+    4. Orders the results by average CP in descending order
+    
+    This will help Professor Oak identify which types tend to produce the strongest Pokemon.
+  
+  expected_columns:
+    - "type"
+    - "pokemon_count"
+    - "avg_cp"
+    - "max_cp"
+  
+  validation:
+    type: "result_set"
+    file: "solution.sql"
+  
+  hints:
+    - "Use GROUP BY to group Pokemon by type."
+    - "Calculate COUNT(*), AVG(cp), and MAX(cp) for each group."
+    - "Use HAVING to filter groups based on the conditions (COUNT(*) >= 3 AND AVG(cp) > 1400)."
+    - "Remember to order by avg_cp DESC."

@@ -1,0 +1,72 @@
+title: "Column Aliases: AS Keyword"
+description: |
+  When working with your Pokedex database, you might want to make your query results easier to read by giving columns more descriptive names, especially for calculated fields or complex expressions. That's where column aliases come in!
+  
+  The AS keyword allows you to rename a column in your result set without changing the actual database. It's like giving a nickname to your Pokemon!
+  
+  Basic syntax:
+  ```sql
+  SELECT
+      column_name AS alias_name
+  FROM
+      table_name;
+  ```
+  
+  For example:
+  ```sql
+  SELECT
+      name AS pokemon_name,
+      type AS pokemon_type,
+      cp AS combat_power
+  FROM
+      pokemon;
+  ```
+  
+  You can also alias calculated fields to give them meaningful names:
+  ```sql
+  SELECT
+      name,
+      attack + defense + stamina AS total_stats
+  FROM
+      pokemon;
+  ```
+  
+  The AS keyword is optional in many database systems, but using it makes your queries more readable:
+  ```sql
+  -- These are equivalent
+  SELECT name AS pokemon_name FROM pokemon;
+  SELECT name pokemon_name FROM pokemon;
+  ```
+
+difficulty: "beginner"
+
+setup:
+  - file: "setup.sql"
+
+challenge:
+  task: |
+    Professor Oak is preparing a presentation on Pokemon types and strengths. He needs a neatly formatted report with clear column headings.
+    
+    Write a query that:
+    1. Selects the name and renames it as "Pokemon Name"
+    2. Selects the type and renames it as "Pokemon Type"
+    3. Creates a calculated field combining hp and defense (hp + defense) and names it "Defensive Strength"
+    4. Creates a calculated field combining attack and speed (attack + speed) and names it "Offensive Strength"
+    
+    Order the results by "Offensive Strength" in descending order.
+  
+  expected_columns:
+    - "Pokemon Name"
+    - "Pokemon Type"
+    - "Defensive Strength"
+    - "Offensive Strength"
+  
+  validation:
+    type: "result_set"
+    file: "solution.sql"
+  
+  hints:
+    - "Use the AS keyword to rename columns in your results."
+    - "For column names with spaces, you'll need to enclose them in double quotes."
+    - "Remember that aliases with spaces require quotes: 'Pokemon Name' needs to be '\"Pokemon Name\"'"
+    - "Create the calculated fields by adding the appropriate stats together."

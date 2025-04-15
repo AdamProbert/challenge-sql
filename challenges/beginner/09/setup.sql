@@ -1,0 +1,55 @@
+-- Setup for beginner challenge #9 on calculated fields
+CREATE TABLE pokemon (
+    pokemon_id SERIAL PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    type VARCHAR(50) NOT NULL,
+    attack INTEGER NOT NULL,
+    defense INTEGER NOT NULL,
+    speed INTEGER NOT NULL,
+    hp INTEGER NOT NULL
+);
+
+-- Insert Pokemon with varied stats
+INSERT INTO
+    pokemon (name, type, attack, defense, speed, hp)
+VALUES
+    ('Mewtwo', 'Psychic', 110, 90, 130, 106),
+    ('Dragonite', 'Dragon', 134, 95, 80, 91),
+    ('Gyarados', 'Water', 125, 79, 81, 95),
+    ('Alakazam', 'Psychic', 50, 45, 120, 55),
+    ('Arcanine', 'Fire', 110, 80, 95, 90),
+    ('Rhydon', 'Ground', 130, 120, 40, 105),
+    ('Exeggutor', 'Grass', 95, 85, 55, 95),
+    ('Golem', 'Rock', 120, 130, 45, 80),
+    ('Gengar', 'Ghost', 65, 60, 110, 60),
+    ('Omastar', 'Rock', 60, 125, 55, 70),
+    ('Venusaur', 'Grass', 82, 83, 80, 80),
+    ('Charizard', 'Fire', 84, 78, 100, 78),
+    ('Blastoise', 'Water', 83, 100, 78, 79),
+    ('Snorlax', 'Normal', 110, 65, 30, 160),
+    ('Lapras', 'Water', 85, 80, 60, 130),
+    ('Jolteon', 'Electric', 65, 60, 130, 65),
+    ('Flareon', 'Fire', 130, 60, 65, 65),
+    ('Vaporeon', 'Water', 65, 60, 65, 130),
+    ('Machamp', 'Fighting', 130, 80, 55, 90),
+    ('Articuno', 'Ice', 85, 100, 85, 90),
+    ('Zapdos', 'Electric', 90, 85, 100, 90),
+    ('Moltres', 'Fire', 100, 90, 90, 90),
+    ('Mew', 'Psychic', 100, 100, 100, 100),
+    ('Pikachu', 'Electric', 55, 40, 90, 35),
+    ('Raichu', 'Electric', 90, 55, 110, 60),
+    ('Clefable', 'Fairy', 70, 73, 60, 95),
+    ('Wigglytuff', 'Fairy', 70, 45, 45, 140),
+    ('Golbat', 'Poison', 80, 70, 90, 75),
+    ('Vileplume', 'Grass', 80, 85, 50, 75),
+    ('Golduck', 'Water', 82, 78, 85, 80),
+    ('Poliwrath', 'Water', 95, 95, 70, 90),
+    ('Kadabra', 'Psychic', 35, 30, 105, 40),
+    ('Geodude', 'Rock', 80, 100, 20, 40),
+    ('Graveler', 'Rock', 95, 115, 35, 55),
+    ('Slowbro', 'Water', 75, 110, 30, 95),
+    ('Magnemite', 'Electric', 35, 70, 45, 25),
+    ('Magneton', 'Electric', 60, 95, 70, 50),
+    ('Dewgong', 'Water', 70, 80, 70, 90),
+    ('Grimer', 'Poison', 80, 50, 25, 80),
+    ('Muk', 'Poison', 105, 75, 50, 105);

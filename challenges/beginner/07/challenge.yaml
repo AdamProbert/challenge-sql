@@ -1,0 +1,62 @@
+title: "Range Selection: BETWEEN and IN"
+description: |
+  A skilled Pokemon Trainer needs to quickly find Pokemon within specific ranges or sets of values. The BETWEEN and IN operators are perfect tools for this task - like using your Pokedex to find Pokemon with CP in a certain range or belonging to specific types!
+  
+  The BETWEEN operator selects values within a given range (inclusive), while the IN operator allows you to specify multiple possible values for a column.
+  
+  Basic syntax for BETWEEN:
+  ```sql
+  SELECT column1, column2, ...
+  FROM table_name
+  WHERE columnN BETWEEN value1 AND value2;
+  ```
+  
+  Basic syntax for IN:
+  ```sql
+  SELECT column1, column2, ...
+  FROM table_name
+  WHERE columnN IN (value1, value2, ...);
+  ```
+  
+  Examples:
+  - Find Pokemon with CP between 1000 and 1500:
+    ```sql
+    SELECT * FROM pokemon WHERE cp BETWEEN 1000 AND 1500;
+    ```
+  
+  - Find Pokemon that are either Fire, Water, or Grass type:
+    ```sql
+    SELECT * FROM pokemon WHERE type IN ('Fire', 'Water', 'Grass');
+    ```
+  
+  These operators help write cleaner, more concise queries compared to using multiple OR conditions.
+
+difficulty: "beginner"
+
+setup:
+  - file: "setup.sql"
+
+challenge:
+  task: |
+    Professor Oak is studying starter Pokemon and their evolutions! Write a query to find all Pokemon that match BOTH of these criteria:
+    
+    1. Have CP values BETWEEN 1000 AND 2000 (inclusive)
+    2. Are one of the following types: 'Fire', 'Water', or 'Grass'
+    
+    Return the pokemon_id, name, type, and cp columns ordered by type and then by CP in descending order.
+  
+  expected_columns:
+    - "pokemon_id"
+    - "name"
+    - "type"
+    - "cp"
+  
+  validation:
+    type: "result_set"
+    file: "solution.sql"
+  
+  hints:
+    - "Use the BETWEEN operator to find Pokemon with CP between 1000 and 2000."
+    - "Use the IN operator to find Pokemon that are Fire, Water, or Grass type."
+    - "Combine both conditions with the AND operator."
+    - "Remember to order the results by type first and then by CP in descending order."

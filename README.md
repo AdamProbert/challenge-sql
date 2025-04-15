@@ -74,8 +74,7 @@ python challenge.py --test-all
 The challenges are organized by difficulty:
 
 1. **Beginner**: Basic SELECT statements, WHERE clauses, and simple filtering - just like your starter Pokemon
-2. **Intermediate**: Joins, aggregations, and GROUP BY - evolving your SQL skills
-3. **Advanced**: Subqueries, window functions, and more complex operations - mastering SQL like a Pokemon Champion
+2. **Intermediate**: Joins, aggregations, Subqueries, and GROUP BY - evolving your SQL skills
 
 Each challenge provides:
 - A clear description of the task

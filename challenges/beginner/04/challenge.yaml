@@ -1,0 +1,56 @@
+title: "Sorting Your Pokedex: ORDER BY"
+description: |
+  A good Pokemon Trainer keeps their Pokedex well-organized! In this challenge, you'll learn how to sort your query results using the ORDER BY clause, which is like sorting Pokemon by their stats or names in your Pokedex.
+  
+  The ORDER BY clause allows you to specify the order in which rows are returned in your result set. By default, results are sorted in ascending order (A to Z, low to high), but you can specify descending order using the DESC keyword.
+  
+  Basic syntax:
+  ```sql
+  SELECT column1, column2, ...
+  FROM table_name
+  ORDER BY column1 [ASC|DESC], column2 [ASC|DESC], ...;
+  ```
+  
+  For example, to sort Pokemon by their CP from highest to lowest:
+  ```sql
+  SELECT name, type, cp
+  FROM pokemon
+  ORDER BY cp DESC;
+  ```
+  
+  You can also sort by multiple columns. For example, to sort first by type (alphabetically) and then by CP (highest first):
+  ```sql
+  SELECT name, type, cp
+  FROM pokemon
+  ORDER BY type ASC, cp DESC;
+  ```
+
+difficulty: "beginner"
+
+setup:
+  - file: "setup.sql"
+
+challenge:
+  task: |
+    Professor Oak wants a sorted list of Pokemon! Write a query to select the name, type, and cp columns from the pokemon table. 
+    
+    Sort the results as follows:
+    1. First by type in alphabetical order (A to Z)
+    2. Then within each type, by CP in descending order (highest CP first)
+    
+    This will help Professor Oak organize his Pokemon research by type while highlighting the strongest Pokemon in each type.
+  
+  expected_columns:
+    - "name"
+    - "type"
+    - "cp"
+  
+  validation:
+    type: "result_set"
+    file: "solution.sql"
+  
+  hints:
+    - "Use ORDER BY followed by the columns you want to sort by."
+    - "For alphabetical ordering, use ASC (or omit it since it's the default)."
+    - "For ordering CP from highest to lowest, use DESC."
+    - "Separate multiple columns in the ORDER BY clause with commas."

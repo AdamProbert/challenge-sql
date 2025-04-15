@@ -1,9 +1,12 @@
--- Solution for the intermediate JOIN challenge
+-- Solution for intermediate challenge #1 on basic JOIN operations
 SELECT
-    ip.purchase_id,
-    ip.purchase_date,
-    ip.pokecoin_amount,
-    s.shop_name || ' in ' || s.location AS shop_details
+    p.name AS pokemon_name,
+    p.type,
+    p.cp,
+    t.name AS trainer_name
 FROM
-    item_purchases ip
-    INNER JOIN shops s ON ip.shop_id = s.shop_id;
+    pokemon p
+    JOIN trainers t ON p.trainer_id = t.trainer_id
+ORDER BY
+    trainer_name,
+    cp DESC;

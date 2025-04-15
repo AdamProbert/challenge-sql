@@ -1,0 +1,60 @@
+title: "NULL Values in the Pokedex"
+description: |
+  In the world of Pokemon data, sometimes information is missing or unknown. In SQL, these missing values are represented by NULL, which is not the same as zero or an empty string - it means "no value" or "unknown".
+  
+  Working with NULL values requires special operators because NULL represents the absence of data:
+  
+  - IS NULL: Checks if a value is NULL (missing)
+  - IS NOT NULL: Checks if a value is not NULL (exists)
+  
+  You cannot use standard comparison operators with NULL:
+  ```sql
+  -- This won't work as expected!
+  SELECT * FROM pokemon WHERE evolution_level = NULL;
+  ```
+  
+  Instead, you must use:
+  ```sql
+  -- Correct way to find Pokemon with unknown evolution levels
+  SELECT * FROM pokemon WHERE evolution_level IS NULL;
+  ```
+  
+  For Pokemon with known evolution levels:
+  ```sql
+  SELECT * FROM pokemon WHERE evolution_level IS NOT NULL;
+  ```
+  
+  Understanding NULLs is crucial for maintaining data quality in your Pokemon database and ensuring your queries return the expected results.
+
+difficulty: "beginner"
+
+setup:
+  - file: "setup.sql"
+
+challenge:
+  task: |
+    Professor Oak has incomplete data on some Pokemon! He wants you to help him identify which records need attention.
+    
+    Write a query to find all Pokemon where either:
+    - The evolution_level is NULL (unknown)
+    OR
+    - The evolution_stone is NULL (unknown)
+    
+    Return the pokemon_id, name, type, evolution_level, and evolution_stone columns.
+    Order the results by name alphabetically.
+  
+  expected_columns:
+    - "pokemon_id"
+    - "name"
+    - "type"
+    - "evolution_level"
+    - "evolution_stone"
+  
+  validation:
+    type: "result_set"
+    file: "solution.sql"
+  
+  hints:
+    - "Use the IS NULL operator to check for missing values."
+    - "Combine conditions with the OR operator to find Pokemon missing either evolution_level OR evolution_stone."
+    - "Remember to order the results alphabetically by name using ORDER BY."

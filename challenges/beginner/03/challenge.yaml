@@ -1,0 +1,51 @@
+title: "Advanced Pokemon Filtering: AND, OR, and NOT"
+description: |
+  As a skilled Pokemon Trainer, you need to be able to filter your Pokemon database with more precision. 
+  In this challenge, you'll learn how to combine multiple conditions using logical operators 
+  AND, OR, and NOT to create more complex filters in your Pokedex.
+  
+  The logical operators work like this:
+  
+  - AND: Both conditions must be true (like catching a Pokemon that is BOTH Electric type AND from Kanto)
+  ```sql
+  SELECT * FROM pokemon WHERE type = 'Electric' AND region = 'Kanto';
+  ```
+  
+  - OR: At least one condition must be true (like finding Pokemon that are EITHER Electric OR Water type)
+  ```sql
+  SELECT * FROM pokemon WHERE type = 'Electric' OR type = 'Water';
+  ```
+  
+  - NOT: Inverts a condition (like finding all Pokemon that are NOT Fire type)
+  ```sql
+  SELECT * FROM pokemon WHERE NOT type = 'Fire';
+  ```
+  
+  You can also use parentheses to combine these operators for more complex conditions, just like in mathematics.
+
+difficulty: "beginner"
+
+setup:
+  - file: "setup.sql"
+
+challenge:
+  task: |
+    Professor Oak needs to find specific Pokemon for his research! Write a query to select all Pokemon
+    that are either Electric-type OR Water-type, but ONLY those with CP greater than 1000.
+    
+    Return the pokemon_id, name, type, and cp columns.
+  
+  expected_columns:
+    - "pokemon_id"
+    - "name"
+    - "type"
+    - "cp"
+  
+  validation:
+    type: "result_set"
+    file: "solution.sql"
+  
+  hints:
+    - "Use the OR operator to combine the type conditions (type = 'Electric' OR type = 'Water')"
+    - "Use the AND operator to add the CP condition (... AND cp > 1000)"
+    - "You may need parentheses to ensure the correct operator precedence: WHERE (condition1 OR condition2) AND condition3"
