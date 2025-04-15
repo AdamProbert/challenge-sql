@@ -4,12 +4,42 @@ Challenge execution logic
 
 import os
 from rich.console import Console
+from prompt_toolkit import PromptSession
+from prompt_toolkit.history import InMemoryHistory
+from prompt_toolkit.auto_suggest import AutoSuggestFromHistory
+from prompt_toolkit.completion import WordCompleter
+from prompt_toolkit.styles import Style
 
 console = Console()
+sql_keywords = ['SELECT', 'FROM', 'WHERE', 'JOIN', 'LEFT', 'RIGHT', 'INNER', 'GROUP BY', 
+                'ORDER BY', 'HAVING', 'LIMIT', 'INSERT', 'UPDATE', 'DELETE', 'CREATE', 
+                'ALTER', 'DROP', 'AND', 'OR', 'NOT', 'IN', 'BETWEEN', 'LIKE', 'IS NULL',
+                'IS NOT NULL', 'COUNT', 'SUM', 'AVG', 'MIN', 'MAX', 'AS', 'DISTINCT', 'UNION']
+
+# Create style for prompt
+prompt_style = Style.from_dict({
+    'prompt': '#00aa00 bold',
+    'continuation': '#aaaa00 italic',
+})
+
+def get_user_input(session, prompt_text="SQL> "):
+    """Get multiline input from user with enhanced prompt features."""
+    try:
+        return session.prompt(prompt_text, multiline=False, 
+                             auto_suggest=AutoSuggestFromHistory(),
+                             style=prompt_style)
+    except KeyboardInterrupt:
+        return "q"  # Return quit command on Ctrl+C
+    except EOFError:
+        return "q"  # Return quit command on Ctrl+D
 
 def interactive_mode(challenge_num=None, db_module=None, ui_module=None, 
                      validator_module=None, challenge_loader_module=None):
     """Run the challenge interface in interactive mode."""
+    # Create prompt session with history
+    sql_completer = WordCompleter(sql_keywords, ignore_case=True)
+    session = PromptSession(history=InMemoryHistory(), completer=sql_completer)
+    
     challenges = challenge_loader_module.load_challenges()
     
     if not challenges:
@@ -60,7 +90,7 @@ def interactive_mode(challenge_num=None, db_module=None, ui_module=None,
             
         # Ask user to select a challenge
         console.print("\nEnter the number of the challenge you want to try (or 'q' to quit):")
-        selection = input("> ")
+        selection = get_user_input(session, "> ")
         
         if selection.lower() == 'q':
             return
@@ -95,21 +125,22 @@ def interactive_mode(challenge_num=None, db_module=None, ui_module=None,
             
             user_sql = ""
             lines = []
+            
+            # Enhanced multiline input collection
             while True:
-                try:
-                    line = input()
-                    # Handle single-letter commands immediately - no semicolon required
-                    if line.lower() in ['q', 'h', 'v']:
-                        user_sql = line.lower()
-                        break
-                        
-                    lines.append(line)
-                    user_sql = "\n".join(lines)
+                multiline_prompt = "SQL> " if not lines else "...> "
+                line = get_user_input(session, multiline_prompt)
+                
+                # Handle single-letter commands immediately - no semicolon required
+                if not lines and line.lower() in ['q', 'h', 'v']:
+                    user_sql = line.lower()
+                    break
                     
-                    # If line contains semicolon, we can execute the SQL
-                    if ';' in line:
-                        break
-                except EOFError:
+                lines.append(line)
+                user_sql = "\n".join(lines)
+                
+                # If line contains semicolon, we can execute the SQL
+                if ';' in line:
                     break
                     
             if user_sql == 'q':
@@ -117,13 +148,13 @@ def interactive_mode(challenge_num=None, db_module=None, ui_module=None,
                 
             if user_sql == 'v':
                 ui_module.show_table_data(conn, db_module)
-                input("\nPress Enter to continue...")
+                get_user_input(session, "\nPress Enter to continue...")
                 continue
                 
             if user_sql == 'h':
                 hints = challenge.get('challenge', {}).get('hints', [])
                 ui_module.show_hints(hints)
-                input("\nPress Enter to continue...")
+                get_user_input(session, "\nPress Enter to continue...")
                 continue
                 
             if user_sql.strip():
@@ -145,19 +176,26 @@ def interactive_mode(challenge_num=None, db_module=None, ui_module=None,
                             # If there's a next challenge, automatically proceed
                             if current_challenge < len(challenges) - 1:
                                 console.print("\n[bold]Great work, Trainer! Press Enter to proceed to the next challenge.[/bold]")
-                                input()
+                                get_user_input(session, "")
                                 current_challenge += 1
                                 challenge = challenges[current_challenge]
                                 db_module.setup_challenge_database(conn, challenge)
                                 continue
                             else:
-                                console.print("\n[bold green]Congratulations! You've completed all Pokemon SQL challenges! You're ready to be a Pokemon SQL Master![/bold green]")
+                                console.print("\n[bold green]╔══════════════════════════════════════════════════════════════╗[/bold green]")
+                                console.print("[bold green]║                   [bold yellow]✨  CONGRATULATIONS!  ✨[/bold yellow]                   ║[/bold green]")
+                                console.print("[bold green]║                                                              ║[/bold green]")
+                                console.print("[bold green]║[/bold green]  [bold cyan]You've mastered all Pokémon SQL challenges![/bold cyan]  [bold green]               ║[/bold green]")
+                                console.print("[bold green]║[/bold green]  [bold magenta]Professor Oak would be proud of your database skills![/bold magenta]  [bold green]     ║[/bold green]")
+                                console.print("[bold green]║                                                              ║[/bold green]")
+                                console.print("[bold green]║[/bold green]  [bold yellow]🏆 You are now officially a POKÉMON SQL MASTER! 🏆[/bold yellow]  [bold green]        ║[/bold green]")
+                                console.print("[bold green]╚══════════════════════════════════════════════════════════════╝[/bold green]")
                         else:
                             console.print(f"[bold red]{message}[/bold red]")
                 except Exception as e:
                     console.print(f"[bold red]Error: {e}[/bold red]")
                     
-            input("\nPress Enter to continue...")
+            get_user_input(session, "\nPress Enter to continue...")
     finally:
         conn.close()
 
