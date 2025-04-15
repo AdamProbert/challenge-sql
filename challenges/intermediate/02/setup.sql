@@ -1,4 +1,4 @@
--- Setup for intermediate challenge #1 on basic JOIN operations
+-- Setup for intermediate challenge #2 on LEFT JOIN
 -- Create trainers table
 CREATE TABLE trainers (
     trainer_id SERIAL PRIMARY KEY,
@@ -29,7 +29,7 @@ VALUES
     ('Serena', 'Vaniville Town', 3),
     ('Clemont', 'Lumiose City', 6);
 
--- Insert pokemon data with trainer relationships
+-- Insert pokemon data - mix of captured and wild Pokemon
 INSERT INTO
     pokemon (name, type, cp, trainer_id)
 VALUES
@@ -55,25 +55,19 @@ VALUES
     ('Electivire', 'Electric', 1850, 4),
     ('Arcanine', 'Fire', 1950, 4),
     ('Nidoking', 'Poison', 1800, 4),
-    -- May's Pokemon
-    ('Blaziken', 'Fire', 1850, 5),
-    ('Beautifly', 'Bug', 1100, 5),
-    ('Skitty', 'Normal', 950, 5),
-    -- Dawn's Pokemon
-    ('Piplup', 'Water', 1200, 6),
-    ('Buneary', 'Normal', 1050, 6),
-    ('Pachirisu', 'Electric', 1150, 6),
-    -- Serena's Pokemon
-    ('Braixen', 'Fire', 1350, 7),
-    ('Pancham', 'Fighting', 1200, 7),
-    ('Sylveon', 'Fairy', 1450, 7),
-    -- Clemont's Pokemon
-    ('Luxray', 'Electric', 1550, 8),
-    ('Chespin', 'Grass', 1200, 8),
-    ('Bunnelby', 'Normal', 950, 8),
     -- Wild Pokemon (no trainer)
     ('Mewtwo', 'Psychic', 3000, NULL),
     ('Articuno', 'Ice', 2700, NULL),
     ('Zapdos', 'Electric', 2750, NULL),
     ('Moltres', 'Fire', 2800, NULL),
-    ('Dragonite', 'Dragon', 2650, NULL);
+    ('Dragonite', 'Dragon', 2650, NULL),
+    ('Snorlax', 'Normal', 2500, NULL),
+    ('Lapras', 'Water', 2300, NULL),
+    ('Venusaur', 'Grass', 2200, NULL),
+    ('Machamp', 'Fighting', 2150, NULL),
+    ('Gengar', 'Ghost', 2250, NULL),
+    ('Alakazam', 'Psychic', 2100, NULL),
+    ('Tauros', 'Normal', 1950, NULL),
+    ('Ditto', 'Normal', 1000, NULL),
+    ('Abra', 'Psychic', 1200, NULL),
+    ('Eevee', 'Normal', 1100, NULL);

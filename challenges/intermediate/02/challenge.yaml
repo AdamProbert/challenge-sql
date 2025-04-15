@@ -1,0 +1,57 @@
+title: "LEFT JOIN: Finding Pokemon Without Trainers"
+description: |
+  In the Pokemon world, not all Pokemon have Trainers - many are still wild and waiting to be caught! In your database, this might mean that some Pokemon have a NULL value for their trainer_id.
+  
+  A LEFT JOIN returns all rows from the left table (the first one you mention), and matching rows from the right table. If there's no match in the right table, NULL values are returned for those columns.
+  
+  This is perfect for finding Pokemon that don't have Trainers yet!
+  
+  The syntax for a LEFT JOIN is:
+  ```sql
+  SELECT column(s)
+  FROM table1
+  LEFT JOIN table2 ON table1.column = table2.column;
+  ```
+  
+  For example, to find all Pokemon and their Trainers (if they have one):
+  ```sql
+  SELECT
+      p.name AS pokemon_name,
+      t.name AS trainer_name
+  FROM
+      pokemon p
+      LEFT JOIN trainers t ON p.trainer_id = t.trainer_id;
+  ```
+  
+  Pokemon without a Trainer will have NULL in the trainer_name column.
+
+difficulty: "intermediate"
+
+setup:
+  - file: "setup.sql"
+
+challenge:
+  task: |
+    Professor Oak is looking for rare Pokemon that haven't been captured by Trainers yet!
+    
+    Write a query that:
+    1. Returns all Pokemon names, types, and CP values
+    2. Includes the name of the Trainer who caught them (if any)
+    3. Filters to only show Pokemon that have no Trainer (wild Pokemon)
+    4. Orders the results by CP in descending order
+    
+    This will help Professor Oak identify powerful wild Pokemon for his research expeditions.
+  
+  expected_columns:
+    - "pokemon_name"
+    - "type"
+    - "cp"
+  
+  validation:
+    type: "result_set"
+    file: "solution.sql"
+  
+  hints:
+    - "Use a LEFT JOIN to include all Pokemon, even those without a Trainer."
+    - "Filter for Pokemon where the trainer_id or trainer_name is NULL."
+    - "Remember to order by CP in descending order to see the most powerful wild Pokemon first."

@@ -1,0 +1,72 @@
+title: "Aggregation: COUNT, SUM, AVG, and GROUP BY"
+description: |
+  Now, let's learn how to summarize and analyze Pokemon data using SQL's aggregation functions! Just like how the Pokedex gives you statistics about Pokemon species, these functions help analyze groups of data.
+  
+  Common aggregation functions include:
+  - COUNT(): Counts the number of rows or non-NULL values
+  - SUM(): Calculates the sum of numeric values
+  - AVG(): Calculates the average of numeric values
+  - MAX(): Finds the maximum value
+  - MIN(): Finds the minimum value
+  
+  These functions are often used with GROUP BY, which divides the result set into groups based on one or more columns.
+  
+  Basic syntax:
+  ```sql
+  SELECT
+      column1,
+      AGG_FUNCTION(column2)
+  FROM
+      table_name
+  GROUP BY
+      column1;
+  ```
+  
+  For example, to count how many Pokemon each Trainer has:
+  ```sql
+  SELECT
+      trainer_id,
+      COUNT(*) AS pokemon_count
+  FROM
+      pokemon
+  GROUP BY
+      trainer_id;
+  ```
+
+difficulty: "intermediate"
+
+setup:
+  - file: "setup.sql"
+
+challenge:
+  task: |
+    Professor Oak is analyzing Pokemon distribution among Trainers. He needs statistics about which Trainers have the most Pokemon and the strongest teams.
+    
+    Write a query that:
+    1. Joins the pokemon and trainers tables
+    2. Groups the results by trainer name
+    3. For each Trainer, calculates:
+       - The number of Pokemon they have (as "pokemon_count")
+       - The total CP of all their Pokemon (as "total_team_cp")
+       - The average CP of their Pokemon (as "avg_cp")
+    4. Orders the results by total_team_cp in descending order
+    5. Includes only Trainers who have at least 3 Pokemon
+    
+    This analysis will help Professor Oak understand which Trainers have developed the strongest teams.
+  
+  expected_columns:
+    - "trainer_name"
+    - "pokemon_count"
+    - "total_team_cp"
+    - "avg_cp"
+  
+  validation:
+    type: "result_set"
+    file: "solution.sql"
+  
+  hints:
+    - "Use COUNT(*) to count the number of Pokemon each Trainer has."
+    - "Use SUM(cp) to calculate the total CP for each Trainer's team."
+    - "Use AVG(cp) to calculate the average CP for each Trainer's Pokemon."
+    - "Use the GROUP BY clause to group by trainer_name."
+    - "Use the HAVING clause to filter for Trainers with at least 3 Pokemon."

@@ -1,0 +1,63 @@
+title: "Joining Multiple Tables: Pokemon Evolution Chains"
+description: |
+  In the Pokemon world, many Pokemon evolve into stronger forms. This creates chains of evolution that can be represented in your database through multiple tables.
+  
+  To analyze evolution chains, you'll need to join more than two tables together. This is like connecting your Pokedex entries to trace a Pokemon's evolutionary journey from its basic form to its final stage.
+  
+  When joining multiple tables, you build upon the same JOIN syntax you've already learned:
+  
+  ```sql
+  SELECT columns
+  FROM table1
+  JOIN table2 ON table1.column = table2.column
+  JOIN table3 ON table2.column = table3.column;
+  ```
+  
+  For example, to trace a Pokemon's evolution chain:
+  ```sql
+  SELECT
+      basic.name AS basic_form,
+      middle.name AS middle_form,
+      final.name AS final_form
+  FROM
+      basic_pokemon basic
+      JOIN middle_pokemon middle ON basic.evolution_id = middle.pokemon_id
+      JOIN final_pokemon final ON middle.evolution_id = final.pokemon_id;
+  ```
+
+difficulty: "intermediate"
+
+setup:
+  - file: "setup.sql"
+
+challenge:
+  task: |
+    Professor Oak is studying Pokemon evolution chains! He wants a comprehensive report that shows all three-stage evolution families.
+    
+    Write a query that:
+    1. Joins the `pokemon_species`, `evolution_chains`, and `evolution_methods` tables
+    2. Returns the basic form name, middle form name, and final form name of each evolution chain
+    3. Includes the evolution method and required level/item for each evolution stage
+    4. Orders the results by the evolution_chain_id
+    
+    This will help Professor Oak document how Pokemon evolve through their various stages.
+  
+  expected_columns:
+    - "chain_id"
+    - "basic_form"
+    - "basic_to_middle_method"
+    - "evolution_requirement"
+    - "middle_form"
+    - "middle_to_final_method"
+    - "evolution_requirement2"
+    - "final_form"
+  
+  validation:
+    type: "result_set"
+    file: "solution.sql"
+  
+  hints:
+    - "You'll need to join the pokemon_species table multiple times with different aliases (e.g., basic, middle, final)."
+    - "Use the evolution_chains table to find the relationships between evolution stages."
+    - "Join the evolution_methods table twice to get information about both evolution steps."
+    - "Filter for evolution chains that have all three stages (basic, middle, and final forms)."
