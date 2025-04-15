@@ -22,10 +22,41 @@ def interactive_mode(challenge_num=None, db_module=None, ui_module=None,
             return
         current_challenge = challenge_num - 1
     else:
-        # Show challenge list
+        # Show challenge list grouped by difficulty
         console.print("[bold]Available Pokemon SQL Challenges:[/bold]")
+        
+        # Group challenges by difficulty
+        beginner_challenges = []
+        intermediate_challenges = []
+        advanced_challenges = []
+        
         for i, challenge in enumerate(challenges, 1):
-            console.print(f"{i}. [{challenge.get('difficulty')}] {challenge.get('title')}")
+            difficulty = challenge.get('difficulty', '').lower()
+            if difficulty == 'beginner':
+                beginner_challenges.append((i, challenge))
+            elif difficulty == 'intermediate':
+                intermediate_challenges.append((i, challenge))
+            elif difficulty == 'advanced':
+                advanced_challenges.append((i, challenge))
+            else:
+                # For challenges with unknown difficulty
+                beginner_challenges.append((i, challenge))
+        
+        # Display challenges by difficulty groups
+        if beginner_challenges:
+            console.print("\n[bold green]Beginner Challenges:[/bold green]")
+            for i, challenge in beginner_challenges:
+                console.print(f"{i}. {challenge.get('title')}")
+        
+        if intermediate_challenges:
+            console.print("\n[bold yellow]Intermediate Challenges:[/bold yellow]")
+            for i, challenge in intermediate_challenges:
+                console.print(f"{i}. {challenge.get('title')}")
+        
+        if advanced_challenges:
+            console.print("\n[bold red]Advanced Challenges:[/bold red]")
+            for i, challenge in advanced_challenges:
+                console.print(f"{i}. {challenge.get('title')}")
             
         # Ask user to select a challenge
         console.print("\nEnter the number of the challenge you want to try (or 'q' to quit):")

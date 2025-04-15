@@ -1,0 +1,70 @@
+title: "Wild Card Search: LIKE and Pattern Matching"
+description: |
+  Sometimes you need to find Pokemon with similar characteristics or names that follow a pattern. That's where the LIKE operator comes in - it's like using a special detector to find Pokemon that share certain traits!
+  
+  The LIKE operator is used in a WHERE clause to search for a specified pattern in a column. There are two wildcards used in conjunction with LIKE:
+  
+  - % (percent sign): Represents zero, one, or multiple characters
+  - _ (underscore): Represents a single character
+  
+  Basic syntax:
+  ```sql
+  SELECT column1, column2, ...
+  FROM table_name
+  WHERE columnN LIKE pattern;
+  ```
+  
+  Examples:
+  - Find Pokemon whose names start with 'Char':
+    ```sql
+    SELECT * FROM pokemon WHERE name LIKE 'Char%';
+    ```
+    This would match Charmander, Charmeleon, Charizard.
+  
+  - Find Pokemon whose names end with 'chu':
+    ```sql
+    SELECT * FROM pokemon WHERE name LIKE '%chu';
+    ```
+    This would match Pikachu, Raichu.
+  
+  - Find Pokemon whose names have 'saur' anywhere in them:
+    ```sql
+    SELECT * FROM pokemon WHERE name LIKE '%saur%';
+    ```
+    This would match Bulbasaur, Ivysaur, Venusaur.
+  
+  - Find Pokemon with exactly 5 letters in their name:
+    ```sql
+    SELECT * FROM pokemon WHERE name LIKE '_____';
+    ```
+    This would match names like Abra, Mew, etc.
+
+difficulty: "beginner"
+
+setup:
+  - file: "setup.sql"
+
+challenge:
+  task: |
+    Professor Oak is looking for Pokemon with specific naming patterns for his research! Write a query to find all Pokemon whose names:
+    
+    - End with the letters "chu" (like Pikachu, Raichu)
+    OR
+    - Contain the word "saur" anywhere in their name (like Bulbasaur, Venusaur)
+    
+    Return the pokemon_id, name, and type columns.
+  
+  expected_columns:
+    - "pokemon_id"
+    - "name"
+    - "type"
+  
+  validation:
+    type: "result_set"
+    file: "solution.sql"
+  
+  hints:
+    - "Use the LIKE operator with the % wildcard to find patterns in names."
+    - "For Pokemon ending with 'chu', use name LIKE '%chu'"
+    - "For Pokemon containing 'saur', use name LIKE '%saur%'"
+    - "Combine these conditions with the OR operator."

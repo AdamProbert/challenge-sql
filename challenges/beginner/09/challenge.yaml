@@ -1,0 +1,56 @@
+title: "Calculated Fields: Basic Arithmetic"
+description: |
+  SQL isn't just for retrieving raw data from your Pokedex - you can also perform calculations directly in your queries! This allows you to compute new values based on existing data, like calculating a Pokemon's power rating based on its stats.
+  
+  You can use any of the standard arithmetic operators in your SQL queries:
+  - Addition (+)
+  - Subtraction (-)
+  - Multiplication (*)
+  - Division (/)
+  - Modulo (%)
+  
+  For example, to calculate a Pokemon's total power:
+  ```sql
+  SELECT
+      name,
+      attack,
+      defense,
+      (attack + defense) AS total_power
+  FROM
+      pokemon;
+  ```
+  
+  You can also use mathematical functions like ROUND(), CEIL(), FLOOR(), ABS(), and more, depending on your database system.
+  
+  These calculated fields only exist in the query results - they don't change the data stored in the database.
+
+difficulty: "beginner"
+
+setup:
+  - file: "setup.sql"
+
+challenge:
+  task: |
+    Professor Oak is developing a battle power formula for his Pokemon research! He needs to calculate a battle power score for each Pokemon.
+    
+    Write a query that:
+    1. Selects the name and type of each Pokemon
+    2. Calculates a "battle_power" value using the formula: (attack * 2) + defense + (speed / 2)
+    3. Orders the results by battle_power in descending order (highest first)
+    
+    Return only Pokemon with a battle_power greater than 200.
+  
+  expected_columns:
+    - "name"
+    - "type"
+    - "battle_power"
+  
+  validation:
+    type: "result_set"
+    file: "solution.sql"
+  
+  hints:
+    - "Use arithmetic operators (+, -, *, /) to calculate the battle_power."
+    - "Remember to use parentheses to control the order of operations."
+    - "Use a WHERE clause to filter for battle_power > 200."
+    - "Order the results using ORDER BY battle_power DESC."

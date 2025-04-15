@@ -1,0 +1,56 @@
+title: "Limiting Your Results: LIMIT and OFFSET"
+description: |
+  When working with large Pokemon databases, you often don't need to retrieve all records at once. That's where LIMIT and OFFSET come in handy - they're like choosing which page of your Pokedex to view!
+  
+  The LIMIT clause restricts the number of rows returned by a query, while OFFSET specifies how many rows to skip before starting to return rows.
+  
+  Basic syntax:
+  ```sql
+  SELECT column1, column2, ...
+  FROM table_name
+  LIMIT number_of_rows
+  OFFSET number_of_rows_to_skip;
+  ```
+  
+  For example, to get just the top 5 Pokemon with the highest CP:
+  ```sql
+  SELECT name, cp
+  FROM pokemon
+  ORDER BY cp DESC
+  LIMIT 5;
+  ```
+  
+  To get the next 5 Pokemon (ranks 6-10):
+  ```sql
+  SELECT name, cp
+  FROM pokemon
+  ORDER BY cp DESC
+  LIMIT 5 OFFSET 5;
+  ```
+  
+  This is especially useful for implementing pagination in applications or when dealing with very large datasets.
+
+difficulty: "beginner"
+
+setup:
+  - file: "setup.sql"
+
+challenge:
+  task: |
+    Professor Oak is creating a "Top Pokemon" leaderboard for his lab! Write a query to find the 5 strongest Pokemon based on CP.
+    
+    Return the name, type, and cp columns, ordered by CP from highest to lowest, but only include the top 5 Pokemon with the highest CP values.
+  
+  expected_columns:
+    - "name"
+    - "type"
+    - "cp"
+  
+  validation:
+    type: "result_set"
+    file: "solution.sql"
+  
+  hints:
+    - "First, use ORDER BY cp DESC to sort the Pokemon from highest to lowest CP."
+    - "Then, add LIMIT 5 to restrict the results to only the top 5 Pokemon."
+    - "Remember that the LIMIT clause should be at the end of your query, after any WHERE or ORDER BY clauses."
