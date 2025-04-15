@@ -2,6 +2,9 @@
 
 This repository contains a series of progressive challenges designed to help you learn SQL fundamentals with no prior knowledge. The challenges are themed around building and using a Pokedex database, starting from basic SELECT statements and working up to complex queries that Professor Oak himself would be proud of!
 
+![image](https://github.com/user-attachments/assets/caf62775-2449-4a7f-9507-9b09460b146e)
+
+
 ## Prerequisites
 
 - Docker (for running the PostgreSQL database)
