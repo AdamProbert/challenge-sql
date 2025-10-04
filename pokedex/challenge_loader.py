@@ -1,24 +1,27 @@
-"""
-Challenge loading and validation utilities
-"""
+"""Challenge loading and validation utilities."""
 
-import os
+from __future__ import annotations
+
 import yaml
+from pathlib import Path
 from rich.console import Console
 
 console = Console()
 
-def validate_challenge_directories(difficulty):
+BASE_DIR = Path(__file__).resolve().parent.parent
+CHALLENGES_ROOT = BASE_DIR / "challenges"
+
+
+def validate_challenge_directories(difficulty: str) -> bool:
     """Validate that challenge directories are sequentially numbered."""
-    challenge_dir = os.path.join('challenges', difficulty)
-    if not os.path.exists(challenge_dir):
+    challenge_dir = CHALLENGES_ROOT / difficulty
+    if not challenge_dir.exists():
         return True
     
-    # Find all numbered directories
     numbered_dirs = []
-    for dirname in os.listdir(challenge_dir):
-        if os.path.isdir(os.path.join(challenge_dir, dirname)) and dirname.isdigit():
-            numbered_dirs.append(int(dirname))
+    for entry in challenge_dir.iterdir():
+        if entry.is_dir() and entry.name.isdigit():
+            numbered_dirs.append(int(entry.name))
     
     if not numbered_dirs:
         return True
@@ -37,58 +40,64 @@ def validate_challenge_directories(difficulty):
     
     return True
 
-def load_challenges():
+def load_challenges() -> list[dict]:
     """Load all challenge definitions from YAML files in numbered directories."""
     challenges = []
     
-    for difficulty in ['beginner', 'intermediate', 'advanced']:
+    for difficulty in ["beginner", "intermediate", "advanced"]:
         # Validate directory structure
         validate_challenge_directories(difficulty)
         
-        challenge_dir = os.path.join('challenges', difficulty)
-        if not os.path.exists(challenge_dir):
+        challenge_dir = CHALLENGES_ROOT / difficulty
+        if not challenge_dir.exists():
             continue
             
-        # Get all numbered directories
         subdirs = []
-        for dirname in os.listdir(challenge_dir):
-            dir_path = os.path.join(challenge_dir, dirname)
-            if os.path.isdir(dir_path) and dirname.isdigit():
-                subdirs.append((int(dirname), dir_path))
+        for entry in challenge_dir.iterdir():
+            if entry.is_dir() and entry.name.isdigit():
+                subdirs.append((int(entry.name), entry))
                 
         # Sort directories by number
-        subdirs.sort()
+        subdirs.sort(key=lambda item: item[0])
         
         # Load challenge from each directory
         for _, dir_path in subdirs:
-            challenge_file = os.path.join(dir_path, 'challenge.yaml')
+            challenge_file = dir_path / "challenge.yaml"
             
-            if os.path.exists(challenge_file):
+            if challenge_file.exists():
                 try:
-                    with open(challenge_file, 'r') as file:
+                    with challenge_file.open("r", encoding="utf-8") as file:
                         challenge = yaml.safe_load(file)
-                        challenge['file_path'] = challenge_file
-                        challenge['dir'] = dir_path
+                        challenge["file_path"] = str(challenge_file)
+                        challenge["dir"] = str(dir_path)
                         challenges.append(challenge)
                 except Exception as e:
                     console.print(f"[yellow]Warning: Could not load challenge {challenge_file}: {e}[/yellow]")
     
     # Sort by difficulty
-    difficulty_order = {'beginner': 1, 'intermediate': 2, 'advanced': 3}
-    challenges.sort(key=lambda x: difficulty_order.get(x.get('difficulty'), 999))
+    difficulty_order = {"beginner": 1, "intermediate": 2, "advanced": 3}
+    challenges.sort(key=lambda x: difficulty_order.get(x.get("difficulty"), 999))
     return challenges
 
-def validate_challenge(challenge):
+def _challenge_dir(challenge: dict) -> Path:
+    return Path(challenge["dir"]).resolve()
+
+
+def validate_challenge(challenge: dict) -> list[str]:
     """Validate that a challenge definition has all required fields."""
     required_fields = [
-        'title', 'description', 'difficulty', 'setup', 
-        'challenge.task', 'challenge.validation'
+        "title",
+        "description",
+        "difficulty",
+        "setup",
+        "challenge.task",
+        "challenge.validation",
     ]
     
     missing_fields = []
     
     for field in required_fields:
-        parts = field.split('.')
+        parts = field.split(".")
         obj = challenge
         for part in parts:
             if isinstance(obj, dict) and part in obj:
@@ -98,16 +107,17 @@ def validate_challenge(challenge):
                 break
     
     # Validate setup files exist
-    for setup_file in challenge.get('setup', []):
-        file_path = os.path.join(challenge['dir'], setup_file.get('file'))
-        if not os.path.exists(file_path):
+    challenge_dir = _challenge_dir(challenge)
+    for setup_file in challenge.get("setup", []):
+        file_path = challenge_dir / setup_file.get("file")
+        if not file_path.exists():
             missing_fields.append(f"setup file: {setup_file.get('file')}")
     
     # Validate solution file exists if result_set validation
-    validation = challenge.get('challenge', {}).get('validation', {})
-    if validation.get('type') == 'result_set':
-        solution_file = os.path.join(challenge['dir'], validation.get('file'))
-        if not os.path.exists(solution_file):
+    validation = challenge.get("challenge", {}).get("validation", {})
+    if validation.get("type") == "result_set":
+        solution_file = challenge_dir / validation.get("file")
+        if not solution_file.exists():
             missing_fields.append(f"solution file: {validation.get('file')}")
     
     return missing_fields

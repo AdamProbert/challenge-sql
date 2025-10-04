@@ -2,6 +2,8 @@
 Database utilities for Pokemon SQL Trainer
 """
 
+import os
+
 import psycopg2
 from rich.console import Console
 
@@ -136,5 +138,4 @@ def get_table_data(conn, table_name, limit=100):
     finally:
         cursor.close()
 
-# Add import at the top of the file
-import os
+

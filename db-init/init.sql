@@ -1,1 +1,30 @@
 GRANT ALL PRIVILEGES ON SCHEMA public TO sqlchallenge;
+
+DO $do$
+BEGIN
+	IF NOT EXISTS (
+		SELECT FROM pg_roles WHERE rolname = 'sqlchallenge_web'
+	) THEN
+		EXECUTE $$CREATE ROLE sqlchallenge_web WITH LOGIN
+			PASSWORD 'sqlchallenge_web'
+			NOSUPERUSER INHERIT NOCREATEDB NOCREATEROLE NOREPLICATION$$;
+	ELSE
+		EXECUTE $$ALTER ROLE sqlchallenge_web WITH LOGIN
+			PASSWORD 'sqlchallenge_web'
+			NOSUPERUSER INHERIT NOCREATEDB NOCREATEROLE NOREPLICATION$$;
+	END IF;
+END;
+$do$;
+
+REVOKE ALL ON DATABASE sqlchallenge FROM PUBLIC;
+GRANT CONNECT ON DATABASE sqlchallenge TO sqlchallenge_web;
+
+CREATE TABLE IF NOT EXISTS web_sessions (
+	session_id UUID PRIMARY KEY,
+	schema_name TEXT NOT NULL,
+	created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+	last_active TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+REVOKE ALL ON TABLE web_sessions FROM PUBLIC;
+GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE web_sessions TO sqlchallenge;
